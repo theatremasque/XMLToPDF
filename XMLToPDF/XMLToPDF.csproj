@@ -12,4 +12,10 @@
     <PackageReference Include="FreeSpire.XLS" Version="12.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="baseTemplate.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

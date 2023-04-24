@@ -16,10 +16,10 @@ namespace XMLToPDF
 
             ExcelWorksheet worksheet;
 
-            using (var report = new ExcelPackage(@"C:\Users\kostr\OneDrive\Робочий стіл\baseTemplate.xlsx"))
-            {
-                worksheet = newReport.Workbook.Worksheets.Add("newTemplate", report.Workbook.Worksheets[0]);
-            }
+            var report = new ExcelPackage("baseTemplate.xlsx");
+            
+            worksheet = newReport.Workbook.Worksheets.Add("newTemplate", report.Workbook.Worksheets[0]);
+            
 
             var model = MarkReportPrintDto.Instanse;
 
@@ -45,38 +45,44 @@ namespace XMLToPDF
             worksheet.Cells["D13"].Value = model.EmployeeSubjectName;
             worksheet.Cells["D14"].Value = model.VeryfiEmployeeSubjectName;
 
-            var decan = model.UniversityDecan;
-            worksheet.Cells["A49"].Value = $"Директор інституту: {decan} ____________________";
-
-            var employeeSubject = model.EmployeeSubjectName;
-            worksheet.Cells["A62"].Value = $"Екзаменатор (викладач): {employeeSubject} ____________________";
-
             //Mark block
             int cell = 18;
             worksheet.Cells["D18"].Value = model.StudyPlanId;
 
+            var couter = 1;
             foreach (var item in model.Marks)
             {
+                if (cell != 18)
+                {                    
+                    worksheet.Cells[cell-1, 1, cell-1, 8].Copy(worksheet.Cells[cell, 1, cell + 1, 8]);
+                }
+                worksheet.Cells["A" + cell].Value = couter++;
                 worksheet.Cells["D" + cell].Value = model.StudyPlanId;
                 worksheet.Cells["B" + cell].Value = item.FullName;
                 worksheet.Cells["E" + cell].Value = item.Value;
-                ++cell;
+                ++cell;               
             }
 
+            worksheet.Cells["A" + (cell + 1)].Value = $"Директор інституту: {model.UniversityDecan} ____________________";            
+            worksheet.Cells["A" + (cell + 3)].Value = $"Екзаменатор (викладач): {model.EmployeeSubjectName} ____________________";
 
-            newReport.SaveAs(@"C:\Users\kostr\OneDrive\Робочий стіл\LeshaPussy.xlsx");
+            var marksSheet = report.Workbook.Worksheets[1];
+
+            marksSheet.Cells[1, 1, 10, 8].Copy(worksheet.Cells[cell + 6, 1, cell + 6 + 9, 8]);
+
+            newReport.SaveAs(@"LeshaPussy.xlsx");
 
             // pdf part
 
-            Workbook convertPdf = new Workbook();
+            //Workbook convertPdf = new Workbook();
 
-            convertPdf.LoadFromFile(newReport.File.FullName);
+            //convertPdf.LoadFromFile(newReport.File.FullName);
 
-            convertPdf.ConverterSetting.SheetFitToPage = true;
+            //convertPdf.ConverterSetting.SheetFitToPage = true;
 
-            convertPdf.SaveToFile("TestConvertXmlTo3.pdf", FileFormat.PDF);
+            //convertPdf.SaveToFile("TestConvertXmlTo3.pdf", FileFormat.PDF);
 
-            Console.WriteLine("Done!");
+            //Console.WriteLine("Done!");
         }
     }
 }
