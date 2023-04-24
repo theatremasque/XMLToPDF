@@ -47,7 +47,6 @@ namespace XMLToPDF
 
             //Mark block
             int cell = 18;
-            worksheet.Cells["D18"].Value = model.StudyPlanId;
 
             var couter = 1;
             foreach (var item in model.Marks)
@@ -68,7 +67,7 @@ namespace XMLToPDF
 
             var marksSheet = report.Workbook.Worksheets[1];
 
-            marksSheet.Cells[1, 1, 10, 8].Copy(worksheet.Cells[cell + 6, 1, cell + 6 + 9, 8]);
+            marksSheet.Cells[1, 1, 10, 8].Copy(worksheet.Cells[cell + 5, 1, cell + 5 + 9, 8]);
 
             newReport.SaveAs(@"LeshaPussy.xlsx");
 
